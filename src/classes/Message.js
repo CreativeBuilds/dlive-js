@@ -18,7 +18,6 @@ const Message = class {
   }
 
   reply(replyMsg) {
-    console.log('replying', Object.keys(this.permissionObj));
     sendMessage(replyMsg, this.streamerBlockchainUsername, this.permissionObj);
   }
 };
