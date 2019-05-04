@@ -7,12 +7,15 @@ const User = class {
   ) {
     if (__typename !== 'StreamchatUser')
       throw new Error('typename from message does not equal StreamchatUser');
+    let _permissionObj = permissionObj;
     this.id = id;
     this.blockchainUsername = username;
     this.dliveUsername = displayname;
     this.avatar = avatar;
     this.partnerStatus = partnerStatus;
-    this.permissionObj = permissionObj;
+    this.getPermissionObj = () => {
+      return _permissionObj;
+    };
   }
 
   sendLino(amount, memo) {
@@ -20,7 +23,7 @@ const User = class {
       this.blockchainUsername,
       amount,
       (memo = null),
-      this.permissionObj
+      this.getPermissionObj()
     );
   }
 };

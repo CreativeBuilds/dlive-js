@@ -21,7 +21,11 @@ const Message = class {
   }
 
   reply(replyMsg) {
-    sendMessage(replyMsg, this.streamerBlockchainUsername, this.permissionObj);
+    sendMessage(
+      replyMsg,
+      this.streamerBlockchainUsername,
+      this.getPermissionObj()
+    );
   }
 };
 
