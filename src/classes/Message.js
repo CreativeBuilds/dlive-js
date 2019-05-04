@@ -5,6 +5,7 @@ const sendMessage = require('../helpers/sendMessage');
 
 const Message = class {
   constructor(message, streamerBlockchainUsername, permissionObj) {
+    let _permissionObj = permissionObj;
     this.content = message.content;
     this.type = message.type;
     this.createdAt = message.createdAt;
@@ -14,7 +15,9 @@ const Message = class {
     this.roomRole = message.roomRole;
     this.sender = new User(message.sender, permissionObj);
     this.streamerBlockchainUsername = streamerBlockchainUsername;
-    this.permissionObj = permissionObj;
+    this.getPermissionObj = () => {
+      return _permissionObj;
+    };
   }
 
   reply(replyMsg) {

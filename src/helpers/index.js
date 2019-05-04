@@ -4,4 +4,4 @@ module.exports.getBlockchainUsername = require('./getBlockchainUsername');
 module.exports.getLivestreamChatroomInfo = require('./getLivestreamChatroomInfo');
 module.exports.sendRequestToDlive = require('./sendRequestToDlive');
 module.exports.processMessageData = require('./processMessageData');
-module.exports.sendMessage = require('./SendMessage');
+module.exports.sendMessage = require('./sendMessage');

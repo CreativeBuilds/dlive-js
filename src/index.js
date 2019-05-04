@@ -39,7 +39,6 @@ const DLive = class {
       let chat = rxChat(blockchainUsername);
       let rxMsgs = new BehaviorSubject();
       chat.subscribe(message => {
-        console;
         processMessageData(
           message,
           blockchainUsername,
