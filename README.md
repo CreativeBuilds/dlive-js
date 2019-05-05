@@ -25,4 +25,4 @@ dlive.listenToChat('creativebuilds').then(messages => {
 });
 ```
 
-3. If you have any questions about documentation/how it works, contact me on discord CreativeBuilds#0001 **DOCUMENTATION IS A WORK IN PROGRESS AND MAY NOT BE RELEASED YET**
+3. If you have any questions about documentation/how it works, contact me on discord CreativeBuilds#0001 **DOCUMENTATION IS NOW RELEASED AND A WORK IN PROGRESS YOU CAN VIEW IT [HERE](https://github.com/CreativeBuilds/dlive-js/wiki)**
