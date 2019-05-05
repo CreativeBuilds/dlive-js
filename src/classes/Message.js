@@ -6,7 +6,7 @@ const sendMessage = require('../helpers/sendMessage');
 const Message = class {
   constructor(message, streamerBlockchainUsername, permissionObj) {
     let _permissionObj = permissionObj;
-    this.content = message.content;
+    this.content = message.content || '';
     this.type = message.type;
     this.createdAt = message.createdAt;
     this.id = message.id;

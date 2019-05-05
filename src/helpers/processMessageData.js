@@ -10,10 +10,12 @@ module.exports = (Data, streamerBlockchainUsername, rxMsgs, permissionObj) => {
     data.payload.data.streamMessageReceived.forEach(msg => {
       if (msg.type === 'Gift') {
         rxMsgs.next(new Gift(msg, streamerBlockchainUsername, permissionObj));
-      } else {
+      } else if (msg.type === 'Message' || msg.type === 'Follow') {
         rxMsgs.next(
           new Message(msg, streamerBlockchainUsername, permissionObj)
         );
+      } else {
+        // console.log('EXTRA MSG READ ALL ABOUT IT', msg);
       }
     });
   }
