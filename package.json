@@ -25,6 +25,7 @@
     "https": "^1.0.0",
     "lino-js": "^1.0.19",
     "queueing-subject": "^0.3.0",
+    "request": "^2.88.0",
     "rxjs": "^6.5.1",
     "rxjs-websockets": "^7.0.0",
     "ws": "^7.0.0"

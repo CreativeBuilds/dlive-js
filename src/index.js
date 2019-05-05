@@ -2,16 +2,18 @@ const {
   validateProps,
   getBlockchainUsername,
   rxChat,
-  processMessageData
+  processMessageData,
+  getLivestreamPage
 } = require('./helpers');
 const { BehaviorSubject } = require('rxjs');
 const { filter } = require('rxjs/operators');
+const Channel = require('./classes/Channel');
+const User = require('./classes/User');
 
 const DLive = class {
   constructor(props) {
     validateProps(props);
     this.authKey = props.authKey;
-    this.chat = new BehaviorSubject();
     this.blockchainPrivKey = props.blockchainPrivKey;
     this.permissionObj = { authKey: this.authKey };
     this.sender = props.sender;
@@ -50,6 +52,28 @@ const DLive = class {
       });
       return rxMsgs.pipe(filter(i => !!i));
     });
+  }
+
+  /**
+   * Returns a Channel object
+   */
+  getChannel(dliveUsername) {
+    // console.log('username', dliveUsername);
+    let perms = Object.assign({}, this.permissionObj, {
+      authKey: this.authKey,
+      streamer: dliveUsername
+    });
+    return getBlockchainUsername(perms, dliveUsername).then(
+      blockchainUsername => {
+        return getLivestreamPage(perms, dliveUsername).then(({ data }) => {
+          let user = new User(data.userByDisplayName, perms);
+          return new Channel(
+            { dliveUsername, blockchainUsername, user },
+            perms
+          );
+        });
+      }
+    );
   }
 };
 

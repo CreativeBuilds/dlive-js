@@ -5,7 +5,7 @@ const User = class {
     { username, displayname, id, __typename, avatar, partnerStatus },
     permissionObj
   ) {
-    if (__typename !== 'StreamchatUser')
+    if (__typename !== 'StreamchatUser' && __typename !== 'User')
       throw new Error('typename from message does not equal StreamchatUser');
     let _permissionObj = permissionObj;
     this.id = id;

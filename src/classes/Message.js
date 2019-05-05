@@ -10,7 +10,6 @@ const Message = class {
     this.type = message.type;
     this.createdAt = message.createdAt;
     this.id = message.id;
-    this.type = message.type;
     this.role = message.role;
     this.roomRole = message.roomRole;
     this.sender = new User(message.sender, permissionObj);

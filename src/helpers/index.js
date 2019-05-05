@@ -5,3 +5,4 @@ module.exports.getLivestreamChatroomInfo = require('./getLivestreamChatroomInfo'
 module.exports.sendRequestToDlive = require('./sendRequestToDlive');
 module.exports.processMessageData = require('./processMessageData');
 module.exports.sendMessage = require('./sendMessage');
+module.exports.getLivestreamPage = require('./getLivestreamPage');
