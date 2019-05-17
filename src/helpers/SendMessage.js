@@ -81,7 +81,7 @@ const sendMessage = (message, streamerBlockchainUsername, permissionObj) => {
     });
     if (!loop) {
       checkMessages();
-      setInterval(() => {
+      loop = setInterval(() => {
         checkMessages();
       }, 2100);
     }
