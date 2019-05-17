@@ -57,9 +57,15 @@ const checkMessages = () => {
         subscribing: true
       }
     }
-  }).catch(err => {
-    throw err;
-  });
+  })
+    .then(() => {
+      if (msg.cb) {
+        msg.cb();
+      }
+    })
+    .catch(err => {
+      throw err;
+    });
 };
 
 const sendMessage = (message, streamerBlockchainUsername, permissionObj) => {
