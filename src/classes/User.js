@@ -1,4 +1,5 @@
 const sendLino = require('../helpers/sendLino');
+const getBalance = require('../helpers/getBalance');
 
 const User = class {
   constructor(
@@ -25,6 +26,12 @@ const User = class {
       (memo = null),
       this.getPermissionObj()
     );
+  }
+
+  getLinoBalance() {
+    return getBalance(this.blockchainUsername).then(obj => {
+      return Math.floor(obj.saving.amount);
+    });
   }
 };
 module.exports = User;

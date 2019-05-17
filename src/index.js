@@ -44,6 +44,7 @@ const DLive = class {
         processMessageData(
           message,
           blockchainUsername,
+          dliveUsername,
           rxMsgs,
           Object.assign({}, this.permissionObj, {
             streamer: blockchainUsername

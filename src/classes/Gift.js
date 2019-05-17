@@ -1,7 +1,12 @@
 const Message = require('./Message');
 
 const Gift = class extends Message {
-  constructor(msg, streamerBlockchainUsername, permissionObj) {
+  constructor(
+    msg,
+    streamerBlockchainUsername,
+    streamerDliveUsername,
+    permissionObj
+  ) {
     super(msg, streamerBlockchainUsername, permissionObj);
     this.gift = msg.gift;
     this.amount = msg.amount;

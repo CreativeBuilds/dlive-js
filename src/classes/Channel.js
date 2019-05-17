@@ -66,14 +66,16 @@ const Channel = class {
       this.rxLivestream
         .pipe(
           filter(x => {
-            if (typeof x === 'object' && Object.keys(x).length === 0)
-              return false;
+            if (typeof x === 'object' && x !== null) {
+              if (Object.keys(x).length === 0) return false;
+            }
+
             return true;
           }),
           first()
         )
         .subscribe(livestream => {
-          if (!livestream) res(0);
+          if (!livestream) res(null);
           getUptime(this.user.blockchainUsername).then(seconds => {
             res(seconds);
           });
