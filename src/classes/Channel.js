@@ -2,6 +2,10 @@ const getLivestreamPage = require('../helpers/getLivestreamPage');
 const { BehaviorSubject } = require('rxjs');
 const { first, filter } = require('rxjs/operators');
 const getUptime = require('../helpers/getUptime');
+const sendMessage = require('../helpers/sendMessage');
+const follow = require('../helpers/follow');
+const unfollow = require('../helpers/unfollow');
+
 const Channel = class {
   constructor({ dliveUsername, blockchainUsername, user }, permissionObj) {
     console;
@@ -31,6 +35,40 @@ const Channel = class {
         this.rxLivestream.next(data.userByDisplayName.livestream);
         return data.userByDisplayName.livestream;
       }
+    );
+  }
+
+  /**
+   * @description sends a message to a channel
+   * @param {string} msg
+   * @returns {promise} sent message
+   */
+  sendMessage(msg) {
+    return sendMessage(msg, this.blockchainUsername, this.getPermissionObj());
+  }
+
+  /**
+   * @description follow the channel
+   */
+  follow() {
+    return follow(this.blockchainUsername, this.getPermissionObj());
+  }
+
+  /**
+   * @description unfollow the channel
+   */
+  unfollow() {
+    return unfollow(this.blockchainUsername, this.getPermissionObj());
+  }
+
+  /**
+   * @description get info about your account relative to the current channel
+   * @return {Promise} returns a raw data object from dlive.
+   */
+  getChatroomInfo() {
+    return getLivestreamChatroomInfo(
+      this.getPermissionObj(),
+      this.dliveUsername
     );
   }
 

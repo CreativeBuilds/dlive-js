@@ -10,6 +10,7 @@ const { BehaviorSubject } = require('rxjs');
 const { filter } = require('rxjs/operators');
 const Channel = require('./classes/Channel');
 const User = require('./classes/User');
+const sendRequestToDlive = require('./helpers/sendRequestToDlive');
 
 const DLive = class {
   constructor(props) {
@@ -57,14 +58,17 @@ const DLive = class {
   }
 
   /**
-   * Return Promise with Obj
+   * @description get all live channels on Dlive (does not provide channel objects, just raw data from dlive)
+   * @returns {Promise} with Obj
    */
   getLiveChannels() {
     return GetLiveChannels(0, 0, this.permissionObj);
   }
 
   /**
-   * Returns a Channel object
+   * @description get a channel object by providing a dliveUsername
+   * @param {string} dliveUsername
+   * @returns {Promise} of a Channel object
    */
   getChannel(dliveUsername) {
     // console.log('username', dliveUsername);
@@ -83,6 +87,15 @@ const DLive = class {
         });
       }
     );
+  }
+
+  /**
+   * @description custom call to dlive
+   * @param {permissionObj} {authKey:''}
+   * @param {object} {query, variables, operationName}
+   */
+  customCall(permissionObj, requestObj) {
+    return sendRequestToDlive(permissionObj, requestObj);
   }
 };
 
