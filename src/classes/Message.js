@@ -1,6 +1,7 @@
 const User = require('./User');
 const Channel = require('./Channel');
 const sendMessage = require('../helpers/sendMessage');
+const sendRequestToDlive = require('../helpers/sendRequestToDlive');
 
 var env = process.env.NODE_ENV || 'production';
 let print = console.log;
@@ -43,6 +44,29 @@ const Message = class {
       this.streamerBlockchainUsername,
       this.getPermissionObj()
     );
+  }
+
+  delete() {
+    return sendRequestToDlive(
+      this.getPermissionObj(),
+      {
+        operationName: 'DeleteChat',
+        query: `mutation DeleteChat($streamer: String!, $id: String!) {
+          chatDelete(streamer: $streamer, id: $id) {
+            err {
+              code
+              message
+              __typename
+            }
+            __typename
+          }
+        }`,
+        variables: {
+          id: this.id,
+          streamer: this.streamerBlockchainUsername
+        }
+      }
+    )
   }
 };
 
