@@ -3,7 +3,8 @@ const {
   getBlockchainUsername,
   rxChat,
   processMessageData,
-  getLivestreamPage
+  getLivestreamPage,
+  getLiveChannels: GetLiveChannels
 } = require('./helpers');
 const { BehaviorSubject } = require('rxjs');
 const { filter } = require('rxjs/operators');
@@ -53,6 +54,10 @@ const DLive = class {
       });
       return rxMsgs.pipe(filter(i => !!i));
     });
+  }
+
+  getLiveChannels() {
+    return GetLiveChannels(0, 0, this.permissionObj);
   }
 
   /**

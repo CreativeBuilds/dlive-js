@@ -8,8 +8,6 @@ if (env === 'production') {
   print = () => {};
 }
 
-// TODO impliment a 'reply' feature which will send a message back to that channel that the message came from
-
 const Message = class {
   constructor(
     message,
