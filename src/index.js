@@ -11,6 +11,8 @@ const { filter } = require('rxjs/operators');
 const Channel = require('./classes/Channel');
 const User = require('./classes/User');
 const sendRequestToDlive = require('./helpers/sendRequestToDlive');
+const getBalance = require('./helpers/getBalance');
+const meGlobal = require('./helpers/meGlobal');
 
 const DLive = class {
   constructor(props) {
@@ -65,6 +67,10 @@ const DLive = class {
     return GetLiveChannels(0, 0, this.permissionObj);
   }
 
+  getBalance() {
+    return getBalance(this.blockchainUsername);
+  }
+
   /**
    * @description get a channel object by providing a dliveUsername
    * @param {string} dliveUsername
@@ -87,6 +93,10 @@ const DLive = class {
         });
       }
     );
+  }
+
+  getSelf() {
+    return meGlobal({ authKey: this.permissionObj.authKey });
   }
 
   /**

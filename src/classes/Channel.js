@@ -5,6 +5,7 @@ const getUptime = require('../helpers/getUptime');
 const sendMessage = require('../helpers/sendMessage');
 const follow = require('../helpers/follow');
 const unfollow = require('../helpers/unfollow');
+const getLivestreamChatroomInfo = require('../helpers/getLivestreamChatroomInfo');
 
 const Channel = class {
   constructor({ dliveUsername, blockchainUsername, user }, permissionObj) {

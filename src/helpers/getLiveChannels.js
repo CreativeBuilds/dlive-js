@@ -84,6 +84,7 @@ module.exports = (index = 0, totalViewers = 0, permissionObj) => {
       }
     }
   }).then(v => {
+    if (v.includes('403 Forbidden')) throw new Error('403 timeout');
     let parsed = JSON.parse(v);
     parsed.data.category.livestreams.list.forEach(stream => {
       streams.push(stream);
