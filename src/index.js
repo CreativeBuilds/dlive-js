@@ -56,6 +56,9 @@ const DLive = class {
     });
   }
 
+  /**
+   * Return Promise with Obj
+   */
   getLiveChannels() {
     return GetLiveChannels(0, 0, this.permissionObj);
   }

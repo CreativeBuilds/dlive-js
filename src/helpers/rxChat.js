@@ -32,6 +32,52 @@ const makeSocket = blockchainUsername => {
             }
           })
         );
+        ws.send(
+          JSON.stringify({
+            id: '2',
+            type: 'start',
+            payload: {
+              variables: {
+                streamer: blockchainUsername
+              },
+              extensions: {},
+              operationName: 'TreasureChestMessageReceived',
+              query: `subscription TreasureChestMessageReceived($streamer: String!) {
+                treasureChestMessageReceived(streamer: $streamer) {
+                  type
+                  ... on TreasureChestGiveawayEnded {
+                    type
+                    __typename
+                  }
+                  ... on TreasureChestValueExpired {
+                    type
+                    expireAt
+                    value
+                    __typename
+                  }
+                  ... on TreasureChestGiveawayStarted {
+                    type
+                    endTime
+                    pricePool
+                    durationInSeconds
+                    __typename
+                  }
+                  ... on TreasureChestReadyToCollect {
+                    type
+                    __typename
+                  }
+                  ... on TreasureChestValueUpdated {
+                    type
+                    value
+                    __typename
+                  }
+                  __typename
+                }
+              }
+              `
+            }
+          })
+        );
       });
       return ws;
     },

@@ -13,7 +13,11 @@ module.exports = (
   // This is the 'keep alive' request from DLive, and can be ignored
   if (data.type === 'ka') return null;
   if (data.type === 'data') {
+    if (data.payload.data.treasureChestMessageReceived) {
+      return rxMsgs.next(data.payload.data.treasureChestMessageReceived);
+    }
     data.payload.data.streamMessageReceived.forEach(msg => {
+      // console.log('new msg');
       if (!msg || msg === null || typeof msg !== 'object') return;
       if (msg.type === 'Gift') {
         rxMsgs.next(
@@ -33,8 +37,19 @@ module.exports = (
             permissionObj
           )
         );
+      } else if (
+        msg.type === 'Delete' ||
+        msg.type === 'Ban' ||
+        msg.type === 'Offline' ||
+        msg.type === 'Live' ||
+        msg.type === 'Mod' ||
+        msg.type === 'Subscription' ||
+        msg.type === 'Host' ||
+        msg.type === 'Timeout'
+      ) {
+        // TODO add classes for all these types
       } else {
-        // console.log('EXTRA MSG READ ALL ABOUT IT', msg);
+        // console.log(msg.type, msg);
       }
     });
   }
