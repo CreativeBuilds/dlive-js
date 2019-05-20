@@ -58,6 +58,51 @@ const User = class {
       }
     )
   }
+
+  // Functions below are performable only with the bots channel.
+
+  mod() {
+    return sendRequestToDlive(
+      this.getPermissionObj(),
+      {
+        operationName: 'AddModerator',
+        query: `mutation AddModerator($username: String!) {
+          moderatorAdd(username: $username) {
+            err {
+              code
+              __typename
+            }
+            __typename
+          }
+        }`,
+        variables: {
+          username: this.dliveUsername
+        }
+      }
+    )
+  }
+
+  unmod() {
+    return sendRequestToDlive(
+      this.getPermissionObj(),
+      {
+        operationName: 'RemoveModerator',
+        query: `mutation RemoveModerator($username: String!) {
+          moderatorRemove(username: $username) {
+            err {
+              code
+              message
+              __typename
+            }
+            __typename
+          }
+        }`,
+        variables: {
+          username: this.dliveUsername
+        }
+      }
+    )
+  }
 };
 
 module.exports = User;
