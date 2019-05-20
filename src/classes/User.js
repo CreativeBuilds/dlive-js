@@ -1,5 +1,6 @@
 const sendLino = require('../helpers/sendLino');
 const getBalance = require('../helpers/getBalance');
+const sendRequestToDlive = require('../helpers/sendRequestToDlive');
 
 const User = class {
   constructor(
@@ -33,5 +34,30 @@ const User = class {
       return Math.floor(obj.saving.amount);
     });
   }
+
+  timeout(streamer) {
+    return sendRequestToDlive(
+      this.getPermissionObj(),
+      {
+        operationName: 'UserTimeoutSet',
+        query: `mutation UserTimeoutSet($streamer: String!, $username: String!, $duration: Int!) {
+          userTimeoutSet(streamer: $streamer, username: $username, duration: $duration) {
+            err {
+              code
+              message
+              __typename
+            }
+            __typename
+          }
+        }`,
+        variables: {
+          duration: 5,
+          username: this.dliveUsername,
+          streamer: streamer
+        }
+      }
+    )
+  }
 };
+
 module.exports = User;
