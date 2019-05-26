@@ -10,5 +10,10 @@ dLive.listenToChat('creativebuilds').then(messages => {
   messages.subscribe(msg => {
     // Reply to chat like so
     msg.reply('Thanks for the message son!');
+
+    // We can also delete messages, for example when trimmed content is equal to "delet this"
+    if(msg.content.trim() == 'delet this') {
+      msg.delete()
+    }
   });
 });
