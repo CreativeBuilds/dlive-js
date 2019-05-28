@@ -1,9 +1,5 @@
 const sendRequestToDlive = require('./sendRequestToDlive');
-let streams = [];
 module.exports = permissionObj => {
-  if (index === 0) {
-    streams = [];
-  }
   return sendRequestToDlive(permissionObj, {
     operationName: 'MeGlobal',
     query: `query MeGlobal {
