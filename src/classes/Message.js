@@ -18,6 +18,7 @@ const Message = class {
   ) {
     let _permissionObj = permissionObj;
     this.content = message.content ? message.content : '';
+
     this.type = message.type;
     this.createdAt = message.createdAt ? message.createdAt : Date.now();
     this.id = message.id;
@@ -29,6 +30,9 @@ const Message = class {
     this.sender = message.sender
       ? new User(message.sender, permissionObj)
       : null;
+    if (message.type === 'Follow') {
+      this.content = `${this.sender.dliveUsername} has just followed!`;
+    }
     this.streamerBlockchainUsername = streamerBlockchainUsername;
     this.streamerDliveUsername = streamerDliveUsername || null;
     this.getPermissionObj = () => {
@@ -45,11 +49,9 @@ const Message = class {
   }
 
   delete() {
-    return sendRequestToDlive(
-      this.getPermissionObj(),
-      {
-        operationName: 'DeleteChat',
-        query: `mutation DeleteChat($streamer: String!, $id: String!) {
+    return sendRequestToDlive(this.getPermissionObj(), {
+      operationName: 'DeleteChat',
+      query: `mutation DeleteChat($streamer: String!, $id: String!) {
           chatDelete(streamer: $streamer, id: $id) {
             err {
               code
@@ -59,12 +61,11 @@ const Message = class {
             __typename
           }
         }`,
-        variables: {
-          id: this.id,
-          streamer: this.streamerBlockchainUsername
-        }
+      variables: {
+        id: this.id,
+        streamer: this.streamerBlockchainUsername
       }
-    )
+    });
   }
 };
 

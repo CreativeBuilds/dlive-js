@@ -5,8 +5,8 @@ const { QueueingSubject } = require('queueing-subject');
 const WebSocket2 = require('ws');
 
 // Takes a blockchainUsername from the linoBlockchain NOT a dlive username
-const makeSocket = blockchainUsername => {
-  if (WebSocket) {
+const makeSocket = (blockchainUsername, returnWs) => {
+  try {
     // User is in browser!
     const socket$ = new BehaviorSubject(null);
 
@@ -99,8 +99,9 @@ const makeSocket = blockchainUsername => {
     };
 
     startBrowser('wss://graphigostream.prd.dlive.tv', 'graphql-ws');
+    if (returnWs) return { messages: messages$, ws };
     return messages$;
-  } else {
+  } catch (err) {
     const input$ = new QueueingSubject();
 
     const socket$ = makeWebSocketObservable(
@@ -190,6 +191,7 @@ const makeSocket = blockchainUsername => {
       }),
       retryWhen(errors => errors.pipe(delay(1000)))
     );
+    if (returnWs) return { messages: messages$, ws };
     return messages$;
   }
 };

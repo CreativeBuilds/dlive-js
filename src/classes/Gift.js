@@ -10,6 +10,9 @@ const Gift = class extends Message {
     super(msg, streamerBlockchainUsername, permissionObj);
     this.gift = msg.gift;
     this.amount = msg.amount;
+    this.content = `${this.sender.dliveUsername} just donated ${
+      this.amount
+    } ${this.gift.toLowerCase()}${this.amount > 1 ? 's' : ''}!`;
     const inLino = (gift, amount) => {
       let multiplier = 9.01e2;
       switch (gift) {

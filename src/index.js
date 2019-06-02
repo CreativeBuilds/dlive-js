@@ -13,6 +13,7 @@ const User = require('./classes/User');
 const sendRequestToDlive = require('./helpers/sendRequestToDlive');
 const getBalance = require('./helpers/getBalance');
 const meGlobal = require('./helpers/meGlobal');
+const sendMessage = require('./helpers/sendMessage');
 
 const DLive = class {
   constructor(props) {
@@ -57,6 +58,23 @@ const DLive = class {
       });
       return rxMsgs.pipe(filter(i => !!i));
     });
+  }
+
+  /**
+   *
+   * @param {string} msg Message to send to the channel
+   * @param {string} dliveUsername The username of the channel you want to send to
+   */
+  sendMessage(msg, dliveUsername) {
+    let perms = Object.assign({}, this.permissionObj, {
+      authKey: this.authKey,
+      streamer: dliveUsername
+    });
+    return getBlockchainUsername(perms, dliveUsername).then(
+      blockchainUsername => {
+        return sendMessage(msg, blockchainUsername, perms);
+      }
+    );
   }
 
   /**

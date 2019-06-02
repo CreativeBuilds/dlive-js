@@ -58,12 +58,13 @@ const checkMessages = () => {
       }
     }
   })
-    .then(() => {
+    .then(i => {
       if (msg.cb) {
-        msg.cb();
+        msg.cb(i);
       }
     })
     .catch(err => {
+      msg.cb(null);
       throw err;
     });
 };
