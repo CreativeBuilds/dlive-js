@@ -37,13 +37,17 @@ const DLive = class {
   /* Return BehaviorSubject
    * When subscribed will get the latest message
    */
-  listenToChat(dliveUsername) {
+  listenToChat(dliveUsername, returnWs = false) {
     //   Needs to connect to DLive through a websocket, then on messages from the websocket push them to this.chat, this function returns this.chat
     return getBlockchainUsername(
       Object.assign({}, this.permissionObj, { streamer: dliveUsername }),
       dliveUsername
     ).then(blockchainUsername => {
-      let chat = rxChat(blockchainUsername);
+      let chat = rxChat(blockchainUsername, returnWs);
+      if (returnWs) {
+        ws = chat.ws;
+        chat = chat.messages;
+      }
       let rxMsgs = new BehaviorSubject();
       chat.subscribe(message => {
         processMessageData(
@@ -56,6 +60,7 @@ const DLive = class {
           })
         );
       });
+      if (returnWs) return { rxMsgs: rxMsgs.pipe(filter(i => !!i)), ws };
       return rxMsgs.pipe(filter(i => !!i));
     });
   }
