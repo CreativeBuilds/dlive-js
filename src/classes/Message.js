@@ -17,19 +17,22 @@ const Message = class {
     permissionObj
   ) {
     let _permissionObj = permissionObj;
+    this.id = message.id;
     this.content = message.content ? message.content : '';
 
     this.type = message.type;
     this.createdAt = message.createdAt ? message.createdAt : Date.now();
-    this.id = message.id;
-    this.role = message.role;
-    this.roomRole = message.roomRole;
+    this.streamerBlockchainUsername = streamerBlockchainUsername;
+    this.streamerDliveUsername = streamerDliveUsername || null;
     if (!message.sender) {
       print('NO MESSAGE SENDER', message);
     }
     this.sender = message.sender
       ? new User(message.sender, permissionObj)
       : null;
+    this.roomRole = message.roomRole;
+    this.role = message.role;
+
     if (message.type === 'Follow') {
       this.content = `${this.sender.dliveUsername} has just followed!`;
     }
@@ -39,8 +42,7 @@ const Message = class {
           ? true
           : false
         : false;
-    this.streamerBlockchainUsername = streamerBlockchainUsername;
-    this.streamerDliveUsername = streamerDliveUsername || null;
+
     this.getPermissionObj = () => {
       return _permissionObj;
     };

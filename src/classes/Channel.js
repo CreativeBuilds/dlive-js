@@ -9,7 +9,6 @@ const getLivestreamChatroomInfo = require('../helpers/getLivestreamChatroomInfo'
 
 const Channel = class {
   constructor({ dliveUsername, blockchainUsername, user }, permissionObj) {
-    console;
     let _permissionObj = permissionObj;
     this.getPermissionObj = () => {
       return _permissionObj;

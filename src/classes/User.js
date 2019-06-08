@@ -35,12 +35,10 @@ const User = class {
     });
   }
 
-  timeout(streamer) {
-    return sendRequestToDlive(
-      this.getPermissionObj(),
-      {
-        operationName: 'UserTimeoutSet',
-        query: `mutation UserTimeoutSet($streamer: String!, $username: String!, $duration: Int!) {
+  timeout(streamerDliveUsername) {
+    return sendRequestToDlive(this.getPermissionObj(), {
+      operationName: 'UserTimeoutSet',
+      query: `mutation UserTimeoutSet($streamer: String!, $username: String!, $duration: Int!) {
           userTimeoutSet(streamer: $streamer, username: $username, duration: $duration) {
             err {
               code
@@ -50,23 +48,20 @@ const User = class {
             __typename
           }
         }`,
-        variables: {
-          duration: 5,
-          username: this.dliveUsername,
-          streamer: streamer
-        }
+      variables: {
+        duration: 5,
+        username: this.dliveUsername,
+        streamer: streamerDliveUsername
       }
-    )
+    });
   }
 
   // Functions below are performable only with the bots channel.
 
   mod() {
-    return sendRequestToDlive(
-      this.getPermissionObj(),
-      {
-        operationName: 'AddModerator',
-        query: `mutation AddModerator($username: String!) {
+    return sendRequestToDlive(this.getPermissionObj(), {
+      operationName: 'AddModerator',
+      query: `mutation AddModerator($username: String!) {
           moderatorAdd(username: $username) {
             err {
               code
@@ -75,19 +70,16 @@ const User = class {
             __typename
           }
         }`,
-        variables: {
-          username: this.dliveUsername
-        }
+      variables: {
+        username: this.dliveUsername
       }
-    )
+    });
   }
 
   unmod() {
-    return sendRequestToDlive(
-      this.getPermissionObj(),
-      {
-        operationName: 'RemoveModerator',
-        query: `mutation RemoveModerator($username: String!) {
+    return sendRequestToDlive(this.getPermissionObj(), {
+      operationName: 'RemoveModerator',
+      query: `mutation RemoveModerator($username: String!) {
           moderatorRemove(username: $username) {
             err {
               code
@@ -97,11 +89,10 @@ const User = class {
             __typename
           }
         }`,
-        variables: {
-          username: this.dliveUsername
-        }
+      variables: {
+        username: this.dliveUsername
       }
-    )
+    });
   }
 };
 
