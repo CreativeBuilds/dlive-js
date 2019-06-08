@@ -3,10 +3,11 @@ const https = require('https');
 // Takes permission object and request object
 module.exports = (
   { authKey, streamer = 'dlivejsnpmmodule' },
-  { operationName, query, variables }
+  { operationName, query, variables, extensions }
 ) => {
   return new Promise((RES, rej) => {
     const postData = JSON.stringify({
+      extensions,
       operationName,
       query,
       variables

@@ -1,6 +1,6 @@
 {
   "name": "dlive-js",
-  "version": "1.0.28",
+  "version": "1.0.29",
   "description": "An npm module to help developers make new applications for dlive.tv",
   "main": "index.js",
   "scripts": {

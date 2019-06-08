@@ -2,6 +2,9 @@ const sendLino = require('../helpers/sendLino');
 const getBalance = require('../helpers/getBalance');
 const sendRequestToDlive = require('../helpers/sendRequestToDlive');
 
+const muteUser = require('../helpers/muteUser');
+const unmuteUser = require('../helpers/unmuteUser');
+
 const User = class {
   constructor(
     { username, displayname, id, __typename, avatar, partnerStatus },
@@ -53,6 +56,20 @@ const User = class {
         username: this.dliveUsername,
         streamer: streamerDliveUsername
       }
+    });
+  }
+
+  mute(streamerBlockchainUsername) {
+    return muteUser(this.getPermissionObj(), {
+      streamer: streamerBlockchainUsername,
+      username: this.blockchainUsername
+    });
+  }
+
+  unmute(streamerBlockchainUsername) {
+    return unmuteUser(this.getPermissionObj(), {
+      streamer: streamerBlockchainUsername,
+      username: this.blockchainUsername
     });
   }
 

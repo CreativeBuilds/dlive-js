@@ -6,6 +6,8 @@ const sendMessage = require('../helpers/sendMessage');
 const follow = require('../helpers/follow');
 const unfollow = require('../helpers/unfollow');
 const getLivestreamChatroomInfo = require('../helpers/getLivestreamChatroomInfo');
+const muteUser = require('../helpers/muteUser');
+const unmuteUser = require('../helpers/unmuteUser');
 
 const Channel = class {
   constructor({ dliveUsername, blockchainUsername, user }, permissionObj) {
@@ -42,6 +44,20 @@ const Channel = class {
         return data.userByDisplayName.livestream;
       }
     );
+  }
+
+  muteUser(blockchainUsername) {
+    return muteUser(this.getPermissionObj(), {
+      streamer: this.blockchainUsername,
+      username: blockchainUsername
+    });
+  }
+
+  unmuteUser(blockchainUsername) {
+    return unmuteUser(this.getPermissionObj(), {
+      streamer: this.blockchainUsername,
+      username: blockchainUsername
+    });
   }
 
   /**
