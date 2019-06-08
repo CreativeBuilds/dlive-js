@@ -1,5 +1,7 @@
 **Welcome To DLive-JS. This is a community built node module to help you make awesome applications that run on DLive's undocumented API**
 
+**[DOCUMENTATION](https://github.com/CreativeBuilds/dlive-js/wiki)** *Please note breaking changes will most likely happen due to the nature of the unofficial DLive api constantly changing, I will try to make them as non-breaking as possible, but still you have been warned*
+
 ### Getting Started
 
 1.  install the module using npm like so, `npm i dlive-js --save`
@@ -25,4 +27,4 @@ dlive.listenToChat('creativebuilds').then(messages => {
 });
 ```
 
-3. If you have any questions about documentation/how it works, contact me on discord CreativeBuilds#0001 **DOCUMENTATION IS NOW RELEASED AND A WORK IN PROGRESS YOU CAN VIEW IT [HERE](https://github.com/CreativeBuilds/dlive-js/wiki)**
+3. If you have any questions about documentation/how it works, contact me on [discord](https://discord.gg/2DGaWDW) CreativeBuilds#0001
