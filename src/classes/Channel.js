@@ -1,6 +1,6 @@
 const getLivestreamPage = require('../helpers/getLivestreamPage');
 const { BehaviorSubject } = require('rxjs');
-const { first, filter } = require('rxjs/operators');
+const { first, filter, tap } = require('rxjs/operators');
 const getUptime = require('../helpers/getUptime');
 const sendMessage = require('../helpers/sendMessage');
 const follow = require('../helpers/follow');
@@ -17,22 +17,28 @@ const Channel = class {
     this.dliveUsername = dliveUsername;
     this.blockchainUsername = blockchainUsername;
     this.user = user;
-    this.livestream = null;
-    this.rxLivestream = new BehaviorSubject({});
+    this.rxLivestream = new BehaviorSubject({}).pipe(
+      tap(() => {
+        if (!this.updateInterval) {
+          /**
+           * Fetches new info on livestream if a user subscribes to the BehaviorSubject
+           */
+          setInterval(() => {
+            this.updateLivestream();
+          }, 10000);
+        }
+      })
+    );
     this.updateLivestream();
-    this.updateInterval = setInterval(() => {
-      this.updateLivestream();
-    }, 10000);
+    this.updateInterval = null;
   }
 
   /**
    * Gets the latest data from dlive for  the livestream object
-   * (if the channel is live otherwise it sets this.livestream to null)
    */
   updateLivestream() {
     return getLivestreamPage(this.getPermissionObj(), this.dliveUsername).then(
       ({ data }) => {
-        this.livestream = data.userByDisplayName.livestream;
         this.rxLivestream.next(data.userByDisplayName.livestream);
         return data.userByDisplayName.livestream;
       }
@@ -80,7 +86,7 @@ const Channel = class {
   getIsLive() {
     return getLivestreamPage(this.getPermissionObj(), this.dliveUsername).then(
       ({ data }) => {
-        this.livestream = data.userByDisplayName.livestream;
+        this.rxLivestream.next(data.userByDisplayName.livestream);
         return !!data.userByDisplayName.livestream;
       }
     );

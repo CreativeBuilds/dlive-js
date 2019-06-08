@@ -33,6 +33,12 @@ const Message = class {
     if (message.type === 'Follow') {
       this.content = `${this.sender.dliveUsername} has just followed!`;
     }
+    this.isEmote =
+      ((this.content || '').match(/[:]/gi) || []).length === 2
+        ? this.content.search(/emote/gi) > -1
+          ? true
+          : false
+        : false;
     this.streamerBlockchainUsername = streamerBlockchainUsername;
     this.streamerDliveUsername = streamerDliveUsername || null;
     this.getPermissionObj = () => {
