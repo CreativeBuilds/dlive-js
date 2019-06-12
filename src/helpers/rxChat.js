@@ -115,6 +115,9 @@ const makeSocket = (blockchainUsername, returnWs) => {
       'wss://graphigostream.prd.dlive.tv',
       {
         makeWebSocket: (uri, protocols) => {
+          console.print(
+            'DLIVE-JS DEBUG: Making websocket (nodejs) to dlive...'
+          );
           let ws = new WebSocket2(uri, protocols);
           ws.on('open', function() {
             totalErrors = 0;
@@ -132,7 +135,11 @@ const makeSocket = (blockchainUsername, returnWs) => {
                   variables: {
                     streamer: blockchainUsername
                   },
-                  extensions: {},
+                  extensions: {
+                    version: 1,
+                    sha256Hash:
+                      '916cddf76e8b906a0a39ed0d9ecb2e3b603733cd91ea69235da267084f63f8ad'
+                  },
                   operationName: 'StreamMessageSubscription',
                   query:
                     'subscription StreamMessageSubscription($streamer: String!) {\n  streamMessageReceived(streamer: $streamer) {\n    type\n    ... on ChatGift {\n      id\n      gift\n      amount\n      recentCount\n      expireDuration\n      ...VStreamChatSenderInfoFrag\n    }\n    ... on ChatHost {\n      id\n      viewer\n      ...VStreamChatSenderInfoFrag\n    }\n    ... on ChatSubscription {\n      id\n      month\n      ...VStreamChatSenderInfoFrag\n    }\n    ... on ChatChangeMode {\n      mode\n    }\n    ... on ChatText {\n      id\n      content\n      ...VStreamChatSenderInfoFrag\n    }\n    ... on ChatFollow {\n      id\n      ...VStreamChatSenderInfoFrag\n    }\n    ... on ChatDelete {\n      ids\n    }\n    ... on ChatBan {\n      id\n      ...VStreamChatSenderInfoFrag\n    }\n    ... on ChatModerator {\n      id\n      ...VStreamChatSenderInfoFrag\n      add\n    }\n    ... on ChatEmoteAdd {\n      id\n      ...VStreamChatSenderInfoFrag\n      emote\n    }\n  }\n}\n\nfragment VStreamChatSenderInfoFrag on SenderInfo {\n  subscribing\n  role\n  roomRole\n  sender {\n    id\n    username\n    displayname\n    avatar\n    partnerStatus\n  }\n}\n'
@@ -201,6 +208,10 @@ const makeSocket = (blockchainUsername, returnWs) => {
         errors.pipe(
           tap(() => {
             totalErrors += 1;
+            console.print(
+              'DLIVE-JS DEBUG: Error from websocket from dlive... new delay (in ms)',
+              totalErrors > 0 ? totalErrors * totalErrors + 1000 : 1000
+            );
           }),
           delay(totalErrors > 0 ? totalErrors * totalErrors + 1000 : 1000)
         )

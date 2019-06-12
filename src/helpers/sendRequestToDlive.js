@@ -30,16 +30,23 @@ module.exports = (
           'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36'
       }
     };
+    console.print('DLIVE-JS DEBUG: Making request to dlive...');
+    console.print(
+      `DLIVE-JS DEBUG: \n---------------- INFO ----------------\nOperationName:${operationName}\nStreamer:${streamer}\nVariables:${JSON.stringify(
+        variables
+      )}\n---------------- INFO ----------------`
+    );
     var body = '';
     var req = https.request(options, res => {
       res.on('data', chunk => {
         body += chunk;
       });
       res.on('end', function() {
+        console.print(`DLIVE-JS DEBUG: Post request passed!`);
         RES(body);
       });
       res.on('error', function(e) {
-        console.error(e);
+        console.print(`DLIVE-JS DEBUG: Post request failed!`);
         RES(
           JSON.stringify({ data: null, errors: ['Request to DLive failed', e] })
         );

@@ -14,10 +14,18 @@ const sendRequestToDlive = require('./helpers/sendRequestToDlive');
 const getBalance = require('./helpers/getBalance');
 const meGlobal = require('./helpers/meGlobal');
 const sendMessage = require('./helpers/sendMessage');
+console.print = console.log;
 
 const DLive = class {
   constructor(props) {
     validateProps(props);
+    if (props.debug === false) {
+      console.print = e => {};
+    } else {
+      console.print(
+        'DLIVE-JS DEBUG: Debug messages enabled, if you wish to disable them please add the flag {debug:false} in the DLive-JS Options on class creation.'
+      );
+    }
     this.authKey = props.authKey;
     this.blockchainPrivKey = props.blockchainPrivKey;
     this.permissionObj = { authKey: this.authKey };
