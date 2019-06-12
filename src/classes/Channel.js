@@ -24,7 +24,7 @@ const Channel = class {
           /**
            * Fetches new info on livestream if a user subscribes to the BehaviorSubject
            */
-          setInterval(() => {
+          this.updateInterval = setInterval(() => {
             this.updateLivestream();
           }, 10000);
         }
