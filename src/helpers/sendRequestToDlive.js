@@ -39,7 +39,10 @@ module.exports = (
         RES(body);
       });
       res.on('error', function(e) {
-        rej(e);
+        console.error(e);
+        RES(
+          JSON.stringify({ data: null, errors: ['Request to DLive failed', e] })
+        );
       });
     });
     req.write(postData);

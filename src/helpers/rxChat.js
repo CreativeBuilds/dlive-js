@@ -4,6 +4,8 @@ const { BehaviorSubject } = require('rxjs');
 const { QueueingSubject } = require('queueing-subject');
 const WebSocket2 = require('ws');
 
+let totalErrors = 0;
+
 // Takes a blockchainUsername from the linoBlockchain NOT a dlive username
 const makeSocket = (blockchainUsername, returnWs) => {
   try {
@@ -88,13 +90,18 @@ const makeSocket = (blockchainUsername, returnWs) => {
     let startBrowser = (websocketServerLocation, protocols) => {
       ws = new WebSocket(websocketServerLocation, protocols);
       ws.onopen = function(e) {
+        totalErrors = 0;
         socket$.next(ws);
       };
       ws.onclose = function(e) {
         // Try to reconnect in 5 seconds
-        setTimeout(function() {
-          startBrowser(websocketServerLocation, protocols);
-        }, 5000);
+        totalErrors += 1;
+        setTimeout(
+          function() {
+            startBrowser(websocketServerLocation, protocols);
+          },
+          totalErrors > 0 ? totalErrors * totalErrors + 1000 : 1000
+        );
       };
     };
 
@@ -110,6 +117,7 @@ const makeSocket = (blockchainUsername, returnWs) => {
         makeWebSocket: (uri, protocols) => {
           let ws = new WebSocket2(uri, protocols);
           ws.on('open', function() {
+            totalErrors = 0;
             ws.send(
               JSON.stringify({
                 type: 'connection_init',
@@ -189,7 +197,14 @@ const makeSocket = (blockchainUsername, returnWs) => {
       switchMap(getResponses => {
         return getResponses(input$);
       }),
-      retryWhen(errors => errors.pipe(delay(1000)))
+      retryWhen(errors =>
+        errors.pipe(
+          tap(() => {
+            totalErrors += 1;
+          }),
+          delay(totalErrors > 0 ? totalErrors * totalErrors + 1000 : 1000)
+        )
+      )
     );
     if (returnWs) return { messages: messages$, ws };
     return messages$;
