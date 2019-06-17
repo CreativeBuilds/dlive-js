@@ -13,6 +13,7 @@ const Gift = class extends Message {
     this.content = `${this.sender.dliveUsername} just donated ${
       this.amount
     } ${this.gift.toLowerCase()}${this.amount > 1 ? 's' : ''}!`;
+    this.donationMessage = msg.content ? msg.content : '';
     const inLino = (gift, amount) => {
       let multiplier = 9.01e2;
       switch (gift) {
