@@ -70,15 +70,17 @@ const checkMessages = () => {
 };
 
 const sendMessage = (message, streamerBlockchainUsername, permissionObj) => {
-  // TODO add a check to see if message is past max character limit, if it is, split it up into multiple messages
   return new Promise((response, reject) => {
-    msgs.push({
-      message,
-      streamer: streamerBlockchainUsername,
-      permissionObj,
-      cb: body => {
-        response(body);
-      }
+    let newMsgs = message.match(/.{1,140}/g);
+    newMsgs.forEach(message => {
+      msgs.push({
+        message,
+        streamer: streamerBlockchainUsername,
+        permissionObj,
+        cb: body => {
+          response(body);
+        }
+      });
     });
     if (!loop) {
       checkMessages();
