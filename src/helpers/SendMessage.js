@@ -1,19 +1,25 @@
-const sendRequestToDlive = require('./sendRequestToDlive');
+const sendRequestToDlive = require("./sendRequestToDlive");
 
-let msgs = [];
-let loop;
+// Now queues messages and loops by authKey to enable multiple Dlive objects/authKeys
+// To send near-instantaneously. (Before, two different Dlive objects used the same
+// sendMessage module with the same msgs object and loop. So one would be held up
+// by the loop that was started by the other Dlive object.)
 
-// Check the msgs array every 2.1 seconds to send the next message (2.1 seconds to avoid debouncing of dlive);
-const checkMessages = () => {
-  if (msgs.length <= 0) {
-    clearInterval(loop);
-    loop = null;
+let msgs = {};
+let loop = {};
+
+const checkMessages = authKey => {
+  if (msgs[authKey].length <= 0) {
+    clearInterval(loop[authKey]);
+    loop[authKey] = null;
+    console.log("LOOP IS CLEARED.");
     return;
   }
-  let msg = msgs[0];
-  msgs = msgs.splice(1);
+  let msg = msgs[authKey][0];
+  msgs[authKey] = msgs[authKey].splice(1);
   sendRequestToDlive(msg.permissionObj, {
-    operationName: 'SendStreamChatMessage',
+    operationName: "SendStreamChatMessage",
+    // So this is a GraphQL query...
     query: `mutation SendStreamChatMessage($input: SendStreamchatMessageInput!) {
                 sendStreamchatMessage(input: $input) {
                   err {
@@ -33,7 +39,7 @@ const checkMessages = () => {
                   __typename
                 }
               }
-              
+
               fragment VStreamChatSenderInfoFrag on SenderInfo {
                 subscribing
                 role
@@ -53,7 +59,7 @@ const checkMessages = () => {
       input: {
         streamer: msg.streamer,
         message: msg.message,
-        roomRole: 'Moderator',
+        roomRole: "Moderator",
         subscribing: true
       }
     }
@@ -70,23 +76,30 @@ const checkMessages = () => {
 };
 
 const sendMessage = (message, streamerBlockchainUsername, permissionObj) => {
-  // TODO add a check to see if message is past max character limit, if it is, split it up into multiple messages
-  return new Promise((response, reject) => {
-    msgs.push({
-      message,
-      streamer: streamerBlockchainUsername,
-      permissionObj,
-      cb: body => {
-        response(body);
-      }
+  if (!msgs[permissionObj.authKey]) msgs[permissionObj.authKey] = [];
+  return new Promise((resolve, reject) => {
+    let newMsgs = message.match(/.{1,140}/g);
+    newMsgs.forEach(message => {
+      let msg = {
+        message,
+        streamer: streamerBlockchainUsername,
+        permissionObj,
+        cb: body => {
+          resolve(body); // response is a weird term for resolve. But what is bod?
+        }
+      };
+      msgs[permissionObj.authKey].push(msg);
     });
-    if (!loop) {
-      checkMessages();
-      loop = setInterval(() => {
-        checkMessages();
-      }, 2100);
+
+    if (!loop[permissionObj.authKey]) {
+      console.log("Message sent!"); //It takes about two seconds to get to this. I don't know. hold on...
+      checkMessages(permissionObj.authKey); // It checks the messages first (sends it first)
+      loop[permissionObj.authKey] = setInterval(() => {
+        checkMessages(permissionObj.authKey); // Then it sends it again ever OHHHHH... I thought it'd be a unique thing each function call
+      }, 2100); // Fuck it!
     }
   });
 };
 
+// I'm gonna submit a pull request to the guy's dlive-js.
 module.exports = sendMessage;
