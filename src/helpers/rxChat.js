@@ -1,5 +1,5 @@
 const makeWebSocketObservable = require('rxjs-websockets').default;
-const { switchMap, retryWhen, delay, filter } = require('rxjs/operators');
+const { switchMap, retryWhen, delay, filter, tap } = require('rxjs/operators');
 const { BehaviorSubject } = require('rxjs');
 const { QueueingSubject } = require('queueing-subject');
 const WebSocket2 = require('ws');

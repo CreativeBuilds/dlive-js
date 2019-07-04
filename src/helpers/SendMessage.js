@@ -1,19 +1,25 @@
 const sendRequestToDlive = require('./sendRequestToDlive');
 
-let msgs = [];
-let loop;
+// Now queues messages and loops by authKey to enable multiple Dlive objects/authKeys
+// To send near-instantaneously. (Before, two different Dlive objects used the same
+// sendMessage module with the same msgs object and loop. So one would be held up
+// by the loop that was started by the other Dlive object.)
 
-// Check the msgs array every 2.1 seconds to send the next message (2.1 seconds to avoid debouncing of dlive);
-const checkMessages = () => {
-  if (msgs.length <= 0) {
-    clearInterval(loop);
-    loop = null;
+let msgs = {};
+let loop = {};
+
+const checkMessages = authKey => {
+  if (msgs[authKey].length <= 0) {
+    clearInterval(loop[authKey]);
+    loop[authKey] = null;
+    console.log('LOOP IS CLEARED.');
     return;
   }
-  let msg = msgs[0];
-  msgs = msgs.splice(1);
+  let msg = msgs[authKey][0];
+  msgs[authKey] = msgs[authKey].splice(1);
   sendRequestToDlive(msg.permissionObj, {
     operationName: 'SendStreamChatMessage',
+    // So this is a GraphQL query...
     query: `mutation SendStreamChatMessage($input: SendStreamchatMessageInput!) {
                 sendStreamchatMessage(input: $input) {
                   err {
@@ -33,7 +39,7 @@ const checkMessages = () => {
                   __typename
                 }
               }
-              
+
               fragment VStreamChatSenderInfoFrag on SenderInfo {
                 subscribing
                 role
@@ -70,20 +76,25 @@ const checkMessages = () => {
 };
 
 const sendMessage = (message, streamerBlockchainUsername, permissionObj) => {
-  // TODO add a check to see if message is past max character limit, if it is, split it up into multiple messages
-  return new Promise((response, reject) => {
-    msgs.push({
-      message,
-      streamer: streamerBlockchainUsername,
-      permissionObj,
-      cb: body => {
-        response(body);
-      }
+  if (!msgs[permissionObj.authKey]) msgs[permissionObj.authKey] = [];
+  return new Promise((resolve, reject) => {
+    let newMsgs = message.match(/.{1,140}/g);
+    newMsgs.forEach(message => {
+      let msg = {
+        message,
+        streamer: streamerBlockchainUsername,
+        permissionObj,
+        cb: body => {
+          resolve(body);
+        }
+      };
+      msgs[permissionObj.authKey].push(msg);
     });
-    if (!loop) {
-      checkMessages();
-      loop = setInterval(() => {
-        checkMessages();
+
+    if (!loop[permissionObj.authKey]) {
+      checkMessages(permissionObj.authKey);
+      loop[permissionObj.authKey] = setInterval(() => {
+        checkMessages(permissionObj.authKey);
       }, 2100);
     }
   });
