@@ -1,4 +1,4 @@
-const sendRequestToDlive = require("./sendRequestToDlive");
+const sendRequestToDlive = require('./sendRequestToDlive');
 
 // Now queues messages and loops by authKey to enable multiple Dlive objects/authKeys
 // To send near-instantaneously. (Before, two different Dlive objects used the same
@@ -12,13 +12,13 @@ const checkMessages = authKey => {
   if (msgs[authKey].length <= 0) {
     clearInterval(loop[authKey]);
     loop[authKey] = null;
-    console.log("LOOP IS CLEARED.");
+    console.log('LOOP IS CLEARED.');
     return;
   }
   let msg = msgs[authKey][0];
   msgs[authKey] = msgs[authKey].splice(1);
   sendRequestToDlive(msg.permissionObj, {
-    operationName: "SendStreamChatMessage",
+    operationName: 'SendStreamChatMessage',
     // So this is a GraphQL query...
     query: `mutation SendStreamChatMessage($input: SendStreamchatMessageInput!) {
                 sendStreamchatMessage(input: $input) {
@@ -59,7 +59,7 @@ const checkMessages = authKey => {
       input: {
         streamer: msg.streamer,
         message: msg.message,
-        roomRole: "Moderator",
+        roomRole: 'Moderator',
         subscribing: true
       }
     }
@@ -85,21 +85,19 @@ const sendMessage = (message, streamerBlockchainUsername, permissionObj) => {
         streamer: streamerBlockchainUsername,
         permissionObj,
         cb: body => {
-          resolve(body); // response is a weird term for resolve. But what is bod?
+          resolve(body);
         }
       };
       msgs[permissionObj.authKey].push(msg);
     });
 
     if (!loop[permissionObj.authKey]) {
-      console.log("Message sent!"); //It takes about two seconds to get to this. I don't know. hold on...
-      checkMessages(permissionObj.authKey); // It checks the messages first (sends it first)
+      checkMessages(permissionObj.authKey);
       loop[permissionObj.authKey] = setInterval(() => {
-        checkMessages(permissionObj.authKey); // Then it sends it again ever OHHHHH... I thought it'd be a unique thing each function call
-      }, 2100); // Fuck it!
+        checkMessages(permissionObj.authKey);
+      }, 2100);
     }
   });
 };
 
-// I'm gonna submit a pull request to the guy's dlive-js.
 module.exports = sendMessage;
