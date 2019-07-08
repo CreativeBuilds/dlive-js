@@ -1,6 +1,6 @@
 const User = require('./User');
 const Channel = require('./Channel');
-const sendMessage = require('../helpers/sendMessage');
+const sendMessage = require('../helpers/SendMessage');
 const sendRequestToDlive = require('../helpers/sendRequestToDlive');
 
 var env = process.env.NODE_ENV || 'production';
