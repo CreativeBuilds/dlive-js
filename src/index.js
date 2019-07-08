@@ -13,7 +13,7 @@ const User = require('./classes/User');
 const sendRequestToDlive = require('./helpers/sendRequestToDlive');
 const getBalance = require('./helpers/getBalance');
 const meGlobal = require('./helpers/meGlobal');
-const sendMessage = require('./helpers/sendMessage');
+const sendMessage = require('./helpers/SendMessage');
 console.print = console.log;
 
 const DLive = class {
