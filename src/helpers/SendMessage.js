@@ -78,7 +78,12 @@ const checkMessages = authKey => {
 const sendMessage = (message, streamerBlockchainUsername, permissionObj) => {
   if (!msgs[permissionObj.authKey]) msgs[permissionObj.authKey] = [];
   return new Promise((resolve, reject) => {
-    let newMsgs = message.match(/.{1,140}/g);
+    let { splitAt } = permissionObj;
+    let newMsgs = [];
+    let charsLength = message.length;
+    for (let i = 0; i < charsLength; i += splitAt) {
+      newMsgs.push(message.substring(i, i + splitAt));
+    }
     newMsgs.forEach(message => {
       let msg = {
         message,
@@ -95,7 +100,7 @@ const sendMessage = (message, streamerBlockchainUsername, permissionObj) => {
       checkMessages(permissionObj.authKey);
       loop[permissionObj.authKey] = setInterval(() => {
         checkMessages(permissionObj.authKey);
-      }, 2100);
+      }, permissionObj.timerInterval);
     }
   });
 };

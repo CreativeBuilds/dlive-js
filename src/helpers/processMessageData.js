@@ -1,5 +1,8 @@
 const Message = require('../classes/Message');
 const Gift = require('../classes/Gift');
+const Subscription = require('../classes/Subscription');
+const GiftedSubscription = require('../classes/GiftedSubscription');
+const GiftedSubscriptionReceived = require('../classes/GiftedSubscriptionReceived');
 
 module.exports = (
   Data,
@@ -37,13 +40,28 @@ module.exports = (
             permissionObj
           )
         );
+      } else if (msg.type === 'Subscription') {
+        rxMsgs.next(
+          new Subscription(msg, streamerBlockchainUsername, permissionObj)
+        );
+      } else if (msg.type === 'GiftSubReceive') {
+        rxMsgs.next(
+          new GiftedSubscriptionReceived(
+            msg,
+            streamerBlockchainUsername,
+            permissionObj
+          )
+        );
+      } else if (msg.type === 'GiftSub') {
+        rxMsgs.next(
+          new GiftedSubscription(msg, streamerBlockchainUsername, permissionObj)
+        );
       } else if (
         msg.type === 'Delete' ||
         msg.type === 'Ban' ||
         msg.type === 'Offline' ||
         msg.type === 'Live' ||
         msg.type === 'Mod' ||
-        msg.type === 'Subscription' ||
         msg.type === 'Host' ||
         msg.type === 'Timeout'
       ) {

@@ -28,8 +28,17 @@ const DLive = class {
     }
     this.authKey = props.authKey;
     this.blockchainPrivKey = props.blockchainPrivKey;
-    this.permissionObj = { authKey: this.authKey };
+    this.timerInterval = isNaN(props.timerInterval)
+      ? 2100
+      : props.timerInterval;
+    this.splitAt = isNaN(props.splitAt) ? 140 : props.splitAt;
+    this.permissionObj = {
+      authKey: this.authKey,
+      timerInterval: this.timerInterval,
+      splitAt: this.splitAt
+    };
     this.sender = props.sender;
+
     if (this.blockchainPrivKey) {
       this.permissionObj = Object.assign({}, this.permissionObj, {
         blockchainPrivKey: props.blockchainPrivKey
