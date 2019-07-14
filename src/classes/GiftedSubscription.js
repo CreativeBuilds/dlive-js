@@ -1,6 +1,6 @@
 const Message = require('./Message');
 
-const Subscription = class extends Message {
+const GiftedSubscription = class extends Message {
   constructor(msg, streamerBlockchainUsername, permissionObj) {
     super(msg, streamerBlockchainUsername, permissionObj);
     this.receiver = msg.receiver;
@@ -12,4 +12,4 @@ const Subscription = class extends Message {
   }
 };
 
-module.exports = Subscription;
+module.exports = GiftedSubscription;
