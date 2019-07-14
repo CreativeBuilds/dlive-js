@@ -13,7 +13,7 @@ const User = require('./classes/User');
 const sendRequestToDlive = require('./helpers/sendRequestToDlive');
 const getBalance = require('./helpers/getBalance');
 const meGlobal = require('./helpers/meGlobal');
-const sendMessage = require('./helpers/sendMessage');
+const sendMessage = require('./helpers/SendMessage');
 console.print = console.log;
 
 const DLive = class {
@@ -28,8 +28,17 @@ const DLive = class {
     }
     this.authKey = props.authKey;
     this.blockchainPrivKey = props.blockchainPrivKey;
-    this.permissionObj = { authKey: this.authKey };
+    this.timerInterval = isNaN(props.timerInterval)
+      ? 2100
+      : props.timerInterval;
+    this.splitAt = isNaN(props.splitAt) ? 140 : props.splitAt;
+    this.permissionObj = {
+      authKey: this.authKey,
+      timerInterval: this.timerInterval,
+      splitAt: this.splitAt
+    };
     this.sender = props.sender;
+
     if (this.blockchainPrivKey) {
       this.permissionObj = Object.assign({}, this.permissionObj, {
         blockchainPrivKey: props.blockchainPrivKey
