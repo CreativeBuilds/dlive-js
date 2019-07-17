@@ -122,17 +122,23 @@ const DLive = class {
       authKey: this.authKey,
       streamer: dliveUsername
     });
-    return getBlockchainUsername(perms, dliveUsername).then(
-      blockchainUsername => {
-        return getLivestreamPage(perms, dliveUsername).then(({ data }) => {
-          let user = new User(data.userByDisplayName, perms);
-          return new Channel(
-            { dliveUsername, blockchainUsername, user },
-            perms
-          );
-        });
-      }
-    );
+    return getBlockchainUsername(perms, dliveUsername)
+      .then(blockchainUsername => {
+        return getLivestreamPage(perms, dliveUsername)
+          .then(({ data }) => {
+            let user = new User(data.userByDisplayName, perms);
+            return new Channel(
+              { dliveUsername, blockchainUsername, user },
+              perms
+            );
+          })
+          .catch(err => {
+            console.error('LIVESTREAM PAGE FAILING', err);
+          });
+      })
+      .catch(err => {
+        console.error('BLOCKCHAIN FAILED', err);
+      });
   }
 
   getSelf() {

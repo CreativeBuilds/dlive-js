@@ -55,9 +55,11 @@ module.exports = (
                 return rej('authkey failed');
               }
             });
-            rej('Dlive errors', json.errors);
+            return Object.keys(json.data).length > 0
+              ? RES(body)
+              : rej(JSON.stringify(json.errors));
           } else {
-            RES();
+            RES(body);
           }
         } catch (err) {
           rej(err);
