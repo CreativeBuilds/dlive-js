@@ -43,7 +43,25 @@ module.exports = (
       });
       res.on('end', function() {
         console.print(`DLIVE-JS DEBUG: Post request passed!`);
-        RES(body);
+        // RES(body);
+        try {
+          let json = JSON.parse(body);
+          if (
+            json.errors !== null &&
+            (json.errors ? json.errors : []).length > 0
+          ) {
+            json.errors.forEach(error => {
+              if (error.message.includes('Require login')) {
+                return rej('authkey failed');
+              }
+            });
+            rej('Dlive errors', json.errors);
+          } else {
+            RES();
+          }
+        } catch (err) {
+          rej(err);
+        }
       });
       res.on('error', function(e) {
         console.print(`DLIVE-JS DEBUG: Post request failed!`);

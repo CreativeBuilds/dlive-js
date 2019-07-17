@@ -19,7 +19,7 @@ const Message = class {
     let _permissionObj = permissionObj;
     this.id = message.id;
     this.content = message.content ? message.content : '';
-
+    this.isSubscribing = message.subscribing;
     this.type = message.type;
     this.createdAt = message.createdAt ? message.createdAt : Date.now();
     this.streamerBlockchainUsername = streamerBlockchainUsername;
